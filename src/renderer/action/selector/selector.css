@@ -1,0 +1,84 @@
+
+div.selector-card {
+    color: whitesmoke;
+    box-shadow: 2px 0px 8px 3px rgba(0,0,0,0.53);
+
+    border: none;
+    width: 100%;
+}
+
+div.display-inline {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.selector-card > .card-header {
+    background-color: rgb(23, 23, 23);
+}
+
+.selector-card > .card-body {
+    background-color: rgb(25, 25, 25);
+}
+
+button.delete-button-inline {
+    background-color: rgb(75, 6, 6);
+    border: 0px;
+    height: 2.25em;
+    opacity: 40%;
+}
+
+button.delete-button-inline:hover {
+    background-color: rgb(69, 3, 3);
+    opacity: 100%;
+}
+
+button.delete-button-inline:active {
+    background-color: black;
+    color: white;
+}
+
+button.add-new-button {
+    width: 90%;
+    height: 2.1em;
+
+    background-color: rgb(12, 84, 12);
+    border: 0px;
+    margin-left: 5%;
+    margin-top: 1em;
+
+    opacity: 40%;
+}
+
+button.add-new-button:hover {
+    opacity: 100%;
+    background-color: rgb(12, 84, 12);
+}
+
+button.add-new-button:active {
+    background-color: rgb(5, 69, 5);;
+}
+
+.sc-button {
+    opacity: 80%;
+}
+
+.sc-button:hover {
+    opacity: 100%;
+}
+
+input {
+    background-color: rgb(20, 20, 20);
+    border: 0px;
+    color: whitesmoke;
+    font-weight: bold;
+    width: 4em;
+}
+
+input.wide {
+    width: 12em;
+}
+
+input.spaced {
+    margin-left: 0.5em;
+}

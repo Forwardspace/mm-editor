@@ -1,0 +1,38 @@
+div > div > h3 {
+    color: whitesmoke;
+}
+
+div > div .action {
+    color: whitesmoke;
+    box-shadow: 2px 0px 8px 3px rgba(0,0,0,0.53);
+
+    margin: 1em;
+    border: none;
+
+    width: 100%;
+}
+
+div .card .card-body {
+    background-color: rgb(25, 25, 25);
+}
+
+button.delete-button {
+    position: absolute;
+    right: 1em;
+    top: 0.5em;
+
+    background-color: rgb(75, 6, 6);
+    border: 0px;
+
+    opacity: 40%;
+}
+
+button.delete-button:hover {
+    background-color: rgb(69, 3, 3);
+    opacity: 100%;
+}
+
+button.delete-button:active {
+    background-color: black;
+    color: white;
+}

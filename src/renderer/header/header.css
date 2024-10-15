@@ -1,0 +1,75 @@
+p, h1, h2, h3, a {
+    color: whitesmoke;
+}
+
+div > p {
+    font-size: large;
+}
+
+.nav-tabs .nav-item .nav-link {
+    background-color:rgb(19, 19, 19);
+    color: whitesmoke;
+    font-size: large;
+    border: 0px;
+    margin-left: 10px;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.nav-tabs  {
+    display: flex;
+    flex-direction: row;
+
+    border: 0px;
+    border-bottom-left-radius: 1em;
+    border-bottom-right-radius: 1em;
+
+    background-color: rgb(25, 25, 25);
+    padding-left: 5%;
+    box-shadow: 0px 0px 8px 3px rgba(0,0,0,0.53);
+
+    padding-bottom: 2px;
+}
+
+#nav-tab-container {
+    border: 0px;
+}
+
+input.name-input {
+    background: none;
+    border: none;
+    color: whitesmoke;
+    font-size: x-large;
+    width: 8em;
+}
+
+.right-aligned {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+button.nav-button {
+    width: 2em;
+    font-size: large;
+
+    margin: 2px;
+    margin-bottom: -20px;
+    border: 0px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+
+    box-shadow: 3px 3px 10px 1px rgba(0,0,0,0.53);
+}
+
+button.nav-button.save {
+    background-color: rgb(4, 85, 4);
+}
+
+button.nav-button.load {
+    background-color: rgb(14, 16, 135);
+}
+
+button.nav-button.delete {
+    background-color: rgb(107, 6, 6);
+}
