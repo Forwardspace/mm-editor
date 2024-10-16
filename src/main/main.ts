@@ -40,13 +40,10 @@ ipcMain.on('save-file', (event, xml) => {
     var dialogResult = dialog.showSaveDialogSync({
       properties: [ 'createDirectory' ]
     });
-    console.log(dialogResult);
     if (dialogResult) {
       openedFile = dialogResult;
     }
   }
-
-  console.log(xml);
 
   if (openedFile == "") {
     return;

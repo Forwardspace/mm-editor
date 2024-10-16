@@ -87,8 +87,24 @@ function serializeAssign(action, elems) {
     }
 }
 
-function serializeHandout(action, elems) {
+function serializeFormattedHandout(text, elems) {
+    // Todo: add mutiple text tags support,
+    //       add formatting support
 
+    // Make sure to escape newlines to they don't break xml formatting
+    elems.push({ type: "element", name: "text", attributes: { text: text.replace("\n", "\\n") }});
+}
+
+function serializeHandout(action, elems) {
+    var newLen = elems.push({ type: "element", name: "assign", elements: [] });
+    elems = elems[newLen - 1].elements;
+
+    serializeSelector(action.selector, elems);
+
+    newLen = elems.push({ type: "element", name: "handouts", elements: [] });
+    elems = elems[newLen - 1].elements;
+
+    serializeFormattedHandout(action.text, elems);
 }
 
 function serializeTagGroup(action, elems) {

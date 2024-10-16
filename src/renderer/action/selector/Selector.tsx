@@ -153,11 +153,11 @@ function getNewSelectorOfType(t) {
 function openAddNewSelectorModal(onChange, limit="none") {
     var options = [
         {type: "players", header: "Players", text: "Select among all players in the game"},
-        {type: "has_type", header: "Has Type", text: "Checks if a person has a tag of a certain name"},
-        {type: "union", header: "Union", text: "Logical 'or' operator. Used to combine results of selectors inside it."},
-        {type: "intersection", header: "Intersection", text: "Logical 'and' operator. Returns only the values that are common to all selectors inside it."},
+        {type: "has_type", header: "Has Type // Tag", text: "Checks if a person has a tag of a certain name"},
+        {type: "union", header: "Union // Any", text: "Logical 'or' operator. Used to combine results of selectors inside it."},
+        {type: "intersection", header: "Intersection // All", text: "Logical 'and' operator. Returns only the values that are common to all selectors inside it."},
         {type: "not", header: "Not", text: "Logical 'not' operator. Returns every value except what is inside it."},
-        {type: "random", header: "Randomization", text: "Used to randomly select between targets with a specified frequency"},
+        {type: "random", header: "Random", text: "Used to randomly select between targets with a specified frequency"},
         {type: "all", header: "All", text: "Select all valid targets in the domain"},
     ];
 
