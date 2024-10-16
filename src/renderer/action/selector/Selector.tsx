@@ -29,6 +29,20 @@ function getNestedSelectorHeader(props) {
                     /> 
                     of these targets randomly:
                 </h3>);
+        case "chance":
+            return (
+                <h3>
+                    with a chance of  
+                    <input 
+                        type="text" 
+                        className="spaced"
+                        value={props.contents.val} 
+                        onChange={(ev) => {
+                            props.passdown.val = ev.target.value
+                        }}
+                    /> 
+                    :
+                </h3>);
         default:
             return (<h3>(unknown nested selector type)</h3>);
     }
@@ -124,6 +138,7 @@ function renderSelectorBody(props, isBasic) {
         case "intersection":
         case "not":
         case "random":
+        case "chance":
             return renderNestedSelector(props);
         case "has_type":
         case "all":
@@ -143,6 +158,8 @@ function getNewSelectorOfType(t) {
             return {type: t, val: "<write tag here>"};
         case "players":
             return {type: t, selector: []};
+        case "chance":
+            return {type: t, val: "50%", selector: []};
         case "random":
             return { type: t, val: "1", selector: [{ type: "all" }] };
         case "all":
@@ -154,10 +171,11 @@ function openAddNewSelectorModal(onChange, limit="none") {
     var options = [
         {type: "players", header: "Players", text: "Select among all players in the game"},
         {type: "has_type", header: "Has Type // Tag", text: "Checks if a person has a tag of a certain name"},
-        {type: "union", header: "Union // Any", text: "Logical 'or' operator. Used to combine results of selectors inside it."},
-        {type: "intersection", header: "Intersection // All", text: "Logical 'and' operator. Returns only the values that are common to all selectors inside it."},
-        {type: "not", header: "Not", text: "Logical 'not' operator. Returns every value except what is inside it."},
+        {type: "union", header: "Union // Any", text: "Logical 'or' operator. Used to combine results of selectors inside it"},
+        {type: "intersection", header: "Intersection // All", text: "Logical 'and' operator. Returns only the values that are common to all selectors inside it"},
+        {type: "not", header: "Not", text: "Logical 'not' operator. Returns every value except what is inside it"},
         {type: "random", header: "Random", text: "Used to randomly select between targets with a specified frequency"},
+        {type: "chance", header: "Chance", text: "Assign a percentage likelihood to what's inside it"},
         {type: "all", header: "All", text: "Select all valid targets in the domain"},
     ];
 

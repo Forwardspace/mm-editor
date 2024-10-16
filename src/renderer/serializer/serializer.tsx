@@ -35,6 +35,12 @@ function serializeSelector(selector, elems) {
                 serializeSelector(sel, elems[newLen - 1].elements);
             }
             break;
+        case "chance":
+            var newLen = elems.push({ type: "element", name: "chance", elements: [], attributes: { probability: selector.val }});
+            for (let sel of selector.selector) {
+                serializeSelector(sel, elems[newLen - 1].elements);
+            }
+            break;
         case "all":
             elems.push({ type: "element", name: "all" });
             break;
