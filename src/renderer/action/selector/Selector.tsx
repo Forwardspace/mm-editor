@@ -9,6 +9,8 @@ function getNestedSelectorHeader(props) {
     switch (props.contents.type) {
         case "players":
             return (<h3>among all players...</h3>);
+        case "tags":
+            return (<h3>among all tags...</h3>);
         case "union":
             return (<h3>any of this needs to be true:</h3>);
         case "intersection":
@@ -95,7 +97,7 @@ function renderTerminal(props) {
         case "has_type":
             terminal = 
                 <p>
-                    {props.basic? "There is a player with the tag" : "Any player with the tag"}
+                    {props.basic? "There is a player/tag with the tag" : "Any player/tag with the tag"}
                     <input 
                         type="text" 
                         className="wide spaced" 
@@ -134,6 +136,7 @@ function renderTerminal(props) {
 function renderSelectorBody(props, isBasic) {
     switch (props.contents.type) {
         case "players":
+        case "tags":
         case "union":
         case "intersection":
         case "not":
@@ -157,6 +160,7 @@ function getNewSelectorOfType(t) {
         case "has_type":
             return {type: t, val: "<write tag here>"};
         case "players":
+        case "tags":
             return {type: t, selector: []};
         case "chance":
             return {type: t, val: "50%", selector: []};
@@ -170,6 +174,7 @@ function getNewSelectorOfType(t) {
 function openAddNewSelectorModal(onChange, limit="none") {
     var options = [
         {type: "players", header: "Players", text: "Select among all players in the game"},
+        {type: "tags", header: "Tags", text: "Select among all tags in the game"},
         {type: "has_type", header: "Has Type // Tag", text: "Checks if a person has a tag of a certain name"},
         {type: "union", header: "Union // Any", text: "Logical 'or' operator. Used to combine results of selectors inside it"},
         {type: "intersection", header: "Intersection // All", text: "Logical 'and' operator. Returns only the values that are common to all selectors inside it"},
@@ -181,17 +186,17 @@ function openAddNewSelectorModal(onChange, limit="none") {
 
     // Leave either only domain or non-domain selectors
     if (limit.includes("domain")) {
-        options.splice(1);
+        options.splice(2);
         modalData.title = "Add domain selector";
     }
     else {
-        options.splice(0, 1);
+        options.splice(0, 2);
         modalData.title = "Add selector";
     }
 
     if (limit.includes("basic") && !limit.includes("domain")) {
         // Remove advanced selectors
-        options.splice(options.length - 2, 2);
+        options.splice(options.length - 3, 3);
     }
 
     modalData.contents = options.map((option) => (

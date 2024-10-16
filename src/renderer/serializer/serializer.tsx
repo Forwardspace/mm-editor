@@ -11,6 +11,12 @@ function serializeSelector(selector, elems) {
                 serializeSelector(sel, elems[newLen - 1].elements);
             }
             break;
+        case "tags":
+            var newLen = elems.push({ type: "element", name: "tags", elements: [] });
+            for (let sel of selector.selector) {
+                serializeSelector(sel, elems[newLen - 1].elements);
+            }
+            break;
         case "union":
             var newLen = elems.push({ type: "element", name: "union", elements: [] });
             for (let sel of selector.selector) {
@@ -24,7 +30,7 @@ function serializeSelector(selector, elems) {
             }
             break;
         case "not":
-            var newLen = elems.push({ type: "element", name: "not", elements: [] });
+            var newLen = elems.push({ type: "element", name: "complement", elements: [] });
             for (let sel of selector.selector) {
                 serializeSelector(sel, elems[newLen - 1].elements);
             }
@@ -61,9 +67,17 @@ function serializeTag(tag, elems) {
 }
 
 function serializeRequires(action, elems) {
-    var newLen = elems.push({ type: "element", name: "requirement", elements: [] });
+    // Create a 'requirements' node below the root
+    // if such a node doesn't already exist
+    var requirements = elems.find((el) => { return el.name == "requirements" });
+    if (requirements == undefined) {
+        elems.push({ type: "element", name: "requirements", elements: [] })
+        requirements = elems[elems.length - 1];
+    }
 
-    serializeSelector(action.selector, elems[newLen - 1].elements);
+    var newLen = requirements.elements.push({ type: "element", name: "requirement", elements: [] });
+
+    serializeSelector(action.selector, requirements.elements[newLen - 1].elements);
 }
 
 function serializeActivate(action, elems) {
