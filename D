@@ -1,1 +1,0 @@
-<rule name="Name"><activate><rules><rule name="rule1"/><rule name="rule2"/><rule name="rule3"/></rules></activate><assign><players><all/></players><tags><tag name="example1"/><tag name="example2"/></tags></assign></rule>

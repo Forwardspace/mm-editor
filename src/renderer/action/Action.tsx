@@ -9,20 +9,31 @@ import { RuleGroup } from './rulegroup/RuleGroup.jsx';
 import { TagGroup } from './taggroup/TagGroup.tsx';
 import { HandoutTextArea } from './handouttextarea/HandoutTextArea.tsx';
 
-function getHeaderText(type) {
-    switch (type) {
+function getHeader(props, passdown) {
+    switch (props.contents.type) {
         case "requirement":
-            return "Requires...";
+            return (<h3>Requires...</h3>);
         case "activate":
-            return "Activates...";
+            return (<h3>Activates...</h3>);
         case "assign":
-            return "Assigns...";
+            return (<h3>
+                        Assigns... 
+                        <span className="spaced">
+                            (same value
+                            <input 
+                                type="checkbox"
+                                className="input-short input-big"
+                                onChange={(ev) => { passdown.together = ev.target.checked }} 
+                            />
+                            )
+                        </span>
+                    </h3>);
         case "handout":
-            return "Hands out to players...";
+            return (<h3>Hands out to players...</h3>);
         case "tag_group":
-            return "Defines tag group...";
+            return (<h3>Defines tag group...</h3>);
         default:
-            return "(unknown type)";
+            return (<h3>(unknown type)</h3>);
     }
 }
 
@@ -98,7 +109,7 @@ function addNewAction(t) {
             data = { type: t, rules: [] };
             break;
         case "assign":
-            data = { type: t, selector: null, tags: []};
+            data = { type: t, together: false, selector: null, tags: []};
             break;
         case "handout":
             data = { type: t, selector: null, text: "" };
@@ -182,7 +193,7 @@ export function Action(props) {
     return (
         <Card className="action">
             <Card.Header style={ getBackgroundColor(props.contents.type) }>
-                <h3>{ getHeaderText(props.contents.type) }</h3>
+                { getHeader(props, passdown) }
                 <Button className="delete-button" onClick={() => {
                     var idx = props.actions.indexOf(props.actions.find((action) => { return action.id == props.contents.id }));
                     props.actions.splice(idx, 1);

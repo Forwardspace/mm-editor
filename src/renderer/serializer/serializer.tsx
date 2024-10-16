@@ -95,7 +95,7 @@ function serializeActivate(action, elems) {
 }
 
 function serializeAssign(action, elems) {
-    var newLen = elems.push({ type: "element", name: "assign", elements: [] });
+    var newLen = elems.push({ type: "element", name: "assign", elements: [], attributes: { together: action.together } });
 
     serializeSelector(action.selector, elems[newLen - 1].elements);
 

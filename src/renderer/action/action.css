@@ -45,3 +45,16 @@ textarea {
     width: 100%;
     min-height: 6em;
 }
+
+input.input-short {
+    margin: 0px;
+    width: 1em;
+}
+
+input.input-big {
+    size: 200%;
+}
+
+span.spaced {
+    margin-left: 0.25em;
+}
