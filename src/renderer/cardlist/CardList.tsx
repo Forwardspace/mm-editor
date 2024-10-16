@@ -7,13 +7,10 @@ import { Action, openAddNewActionModal } from '../action/Action.tsx';
 import { actions, modalData } from '../state.tsx'
 
 import './cardlist.css'
-import { saveFile } from '../serializer/serializer.tsx';
 
 export function CardList() {
     const actions_reactive = useSnapshot(actions);
     const modalData_reactive = useSnapshot(modalData);
-
-    saveFile();
 
     return (
         <div className="card-container" id="cardcontainer">

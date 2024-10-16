@@ -9,11 +9,12 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import { writeFileSync } from 'fs';
 
 class AppUpdater {
   constructor() {
@@ -29,6 +30,30 @@ ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
+});
+
+var openedFile : any = "";
+
+ipcMain.on('save-file', (event, xml) => {
+  if (openedFile == "") {
+    // Prompt the user to open a new file
+    var dialogResult = dialog.showSaveDialogSync({
+      properties: [ 'createDirectory' ]
+    });
+    console.log(dialogResult);
+    if (dialogResult) {
+      openedFile = dialogResult;
+    }
+  }
+
+  console.log(xml);
+
+  if (openedFile == "") {
+    return;
+  }
+
+  // Save the xml in the opened file
+  writeFileSync(openedFile, xml);
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -107,18 +132,12 @@ const createWindow = async () => {
     return { action: 'deny' };
   });
 
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
   new AppUpdater();
 };
 
-/**
- * Add event listeners...
- */
+// Event listeners should go here
 
 app.on('window-all-closed', () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
   if (process.platform !== 'darwin') {
     app.quit();
   }
@@ -129,8 +148,7 @@ app
   .then(() => {
     createWindow();
     app.on('activate', () => {
-      // On macOS it's common to re-create a window in the app when the
-      // dock icon is clicked and there are no other windows open.
+      // For macOS
       if (mainWindow === null) createWindow();
     });
   })

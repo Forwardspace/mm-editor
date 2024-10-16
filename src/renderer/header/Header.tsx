@@ -2,7 +2,9 @@ import { Nav, Container, Button} from 'react-bootstrap';
 import './header.css'
 import React from 'react';
 import { useSnapshot } from 'valtio';
-import { meta } from '../state';
+import { actions, meta } from '../state';
+
+import { saveFile } from '../serializer/serializer.tsx';
 
 export function Header() {
     var meta_reactive = useSnapshot(meta);
@@ -21,13 +23,13 @@ export function Header() {
                 </Nav.Item>
                 <Container className="right-aligned" id="tab-container-right">
                     <Nav.Item>
-                        <Button className="nav-button save">s</Button>
+                        <Button className="nav-button save" onClick={ saveFile }><i className="las la-save"></i></Button>
                     </Nav.Item>
                     <Nav.Item>
-                        <Button className="nav-button load">o</Button>
+                        <Button className="nav-button load"><i className="las la-folder-open"></i></Button>
                     </Nav.Item>
                     <Nav.Item>
-                        <Button className="nav-button delete">x</Button>
+                        <Button className="nav-button delete" onClick={ () => {actions.length = 0} } ><i className="las la-trash"></i></Button>
                     </Nav.Item>
                 </Container>
             </Container>

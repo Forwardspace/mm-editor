@@ -36,3 +36,12 @@ button.delete-button:active {
     background-color: black;
     color: white;
 }
+
+textarea {
+    background-color: rgb(20, 20, 20);
+    border: 0px;
+    color: whitesmoke;
+    font-style: italic;
+    width: 100%;
+    min-height: 6em;
+}

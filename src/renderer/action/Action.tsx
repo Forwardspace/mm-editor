@@ -7,6 +7,7 @@ import './action.css'
 import { actions, modalData } from '../state.tsx';
 import { RuleGroup } from './rulegroup/RuleGroup.jsx';
 import { TagGroup } from './taggroup/TagGroup.tsx';
+import { HandoutTextArea } from './handouttextarea/HandoutTextArea.tsx';
 
 function getHeaderText(type) {
     switch (type) {
@@ -55,13 +56,20 @@ function renderAssignBody(contents, action) {
     return (
         <React.Fragment>
             <DomainSelector basic={false} contents={contents.selector} passdown={action.selector}  onChange={ (sel) => { action.selector = sel } } />
+            <hr/>
             <TagGroup contents={contents} passdown={action} />
         </React.Fragment>
     );
 }
 
 function renderHandoutBody(contents, action) {
-    return (<div></div>);
+    return (
+        <React.Fragment>
+            <DomainSelector basic={false} contents={contents.selector} passdown={action.selector}  onChange={ (sel) => { action.selector = sel } } />
+            <hr />
+            <HandoutTextArea contents={contents} passdown={contents} onChange={ (text) => { action.text = text; } } />
+        </React.Fragment>
+    );
 }
 
 function renderCardBody(contents, action) {

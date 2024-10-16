@@ -1,3 +1,4 @@
+import { snapshot } from 'valtio';
 import { meta, actions } from '../state.tsx';
 
 import { js2xml } from 'xml-js'
@@ -18,6 +19,12 @@ function serializeSelector(selector, elems) {
             break;
         case "intersection":
             var newLen = elems.push({ type: "element", name: "intersection", elements: [] });
+            for (let sel of selector.selector) {
+                serializeSelector(sel, elems[newLen - 1].elements);
+            }
+            break;
+        case "not":
+            var newLen = elems.push({ type: "element", name: "not", elements: [] });
             for (let sel of selector.selector) {
                 serializeSelector(sel, elems[newLen - 1].elements);
             }
@@ -47,7 +54,7 @@ function serializeTag(tag, elems) {
     elems.push({ type: "element", name: "tag", attributes: { name: tag } });
 }
 
-function serializeRequire(action, elems) {
+function serializeRequires(action, elems) {
     var newLen = elems.push({ type: "element", name: "requirement", elements: [] });
 
     serializeSelector(action.selector, elems[newLen - 1].elements);
@@ -90,8 +97,8 @@ function serializeTagGroup(action, elems) {
 
 function serializeAction(action, elems) {
     switch (action.type) {
-        case "require":
-            serializeRequire(action, elems);
+        case "requirement":
+            serializeRequires(action, elems);
             break;
         case "activate":
             serializeActivate(action, elems);
@@ -108,18 +115,23 @@ function serializeAction(action, elems) {
 }
 
 function serializeActions() {
-    var xmlFormat : any = { elements: [ { type: "element", name: meta.type, attributes: { name: meta.name }, elements: [] } ] };
+    var actions_snaphot = snapshot(actions);
+    var meta_snapshot = snapshot(meta);
 
-    for (let action of actions) {
+    var xmlFormat : any = { elements: [ { type: "element", name: meta_snapshot.type, attributes: { name: meta_snapshot.name }, elements: [] } ] };
+
+    for (let action of actions_snaphot) {
         serializeAction(action, xmlFormat.elements[0].elements);
     }
 
-    var finalXml = js2xml(xmlFormat);
-    console.log(finalXml);
-    
-    return finalXml;
+    return js2xml(xmlFormat, {
+        compact: false,
+        spaces: 4
+    });
 }
 
 export function saveFile() {
     var serialized = serializeActions();
+
+    window.electron.ipcRenderer.sendMessage('save-file', serialized);
 }

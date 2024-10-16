@@ -40,7 +40,7 @@ input.name-input {
     border: none;
     color: whitesmoke;
     font-size: x-large;
-    width: 8em;
+    width: 11em;
 }
 
 .right-aligned {
@@ -52,6 +52,8 @@ input.name-input {
 button.nav-button {
     width: 2em;
     font-size: large;
+
+    padding: 6px;
 
     margin: 2px;
     margin-bottom: -20px;

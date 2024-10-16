@@ -16,7 +16,9 @@ export function RuleGroup(props) {
                 {
                     props.contents.map((rule, idx) => (
                         <div className="display-inline">
-                            <p><b>{rule}</b></p>
+                            <input type="text" className="wide" value={rule} onChange={(ev) => {
+                                props.passdown[idx] = ev.target.value;
+                            }} />
                             <Button className="delete-button-inline" onClick={deleteRule.bind(this, idx)}>delete</Button>
                         </div>
                     ))

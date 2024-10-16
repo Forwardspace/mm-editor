@@ -1,6 +1,8 @@
 import { Header } from './header/Header.tsx'
 import { CardList } from './cardlist/CardList.tsx'
 
+import 'line-awesome/dist/line-awesome/css/line-awesome.min.css';
+
 import React from 'react';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 

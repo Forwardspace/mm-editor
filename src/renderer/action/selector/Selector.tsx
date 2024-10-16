@@ -13,6 +13,8 @@ function getNestedSelectorHeader(props) {
             return (<h3>any of this needs to be true:</h3>);
         case "intersection":
             return (<h3>all of this needs to be true:</h3>);
+        case "not":
+            return (props.basic? (<h3>none of this can be true:</h3>) : (<h3>except these:</h3>));
         case "random":
             return (
                 <h3>
@@ -120,6 +122,7 @@ function renderSelectorBody(props, isBasic) {
         case "players":
         case "union":
         case "intersection":
+        case "not":
         case "random":
             return renderNestedSelector(props);
         case "has_type":
@@ -134,6 +137,7 @@ function getNewSelectorOfType(t) {
     switch (t) {
         case "union":
         case "intersection":
+        case "not":
             return {type: t, selector: []};
         case "has_type":
             return {type: t, val: "<write tag here>"};
@@ -149,9 +153,10 @@ function getNewSelectorOfType(t) {
 function openAddNewSelectorModal(onChange, limit="none") {
     var options = [
         {type: "players", header: "Players", text: "Select among all players in the game"},
+        {type: "has_type", header: "Has Type", text: "Checks if a person has a tag of a certain name"},
         {type: "union", header: "Union", text: "Logical 'or' operator. Used to combine results of selectors inside it."},
         {type: "intersection", header: "Intersection", text: "Logical 'and' operator. Returns only the values that are common to all selectors inside it."},
-        {type: "has_type", header: "Has Type", text: "Checks if a person has a tag of a certain name"},
+        {type: "not", header: "Not", text: "Logical 'not' operator. Returns every value except what is inside it."},
         {type: "random", header: "Randomization", text: "Used to randomly select between targets with a specified frequency"},
         {type: "all", header: "All", text: "Select all valid targets in the domain"},
     ];
