@@ -59,12 +59,21 @@ button.add-new-button:active {
     background-color: rgb(5, 69, 5);;
 }
 
-.sc-button {
-    opacity: 80%;
+.sc-button > .card-header {
+    background-color: rgb(23, 23, 23);
 }
 
-.sc-button:hover {
-    opacity: 100%;
+.sc-button:hover > .card-header {
+    background-color: rgb(16, 16, 16);
+}
+
+.sc-button>div:first-child {
+    border-radius: 0px;
+
+}
+
+.sc-button > div {
+    border-radius: 0px;
 }
 
 input {
@@ -80,5 +89,22 @@ input.wide {
 }
 
 input.spaced {
-    margin-left: 0.5em;
+    margin-left: 0.75em;
+}
+
+button.dropdown-toggle {
+    background: none;
+    border: none;
+    font-size: larger;
+    margin-top: -3px;
+}
+
+li.nav-item {
+    width: 100%;
+    margin: 0px;
+}
+
+.nav-tabs .nav-item .nav-link {
+    width: 100%;
+    margin-left: 0px;
 }

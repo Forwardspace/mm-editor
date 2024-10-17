@@ -9,6 +9,5 @@ export var actions = proxy([]);
 
 export var modalData = proxy({
     show: false,
-    title: "",
     contents: {} as any
 });

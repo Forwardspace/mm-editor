@@ -50,8 +50,45 @@ function serializeSelector(selector, elems) {
         case "all":
             elems.push({ type: "element", name: "all" });
             break;
+        case "current_player":
+            elems.push({ type: "element", name: "current_player" });
+            break;
+        case "extract":
+            var name = "from_";
+            switch (selector.from) {
+                case "players":
+                    name += "player_extract_";
+                    break;
+                case "tags":
+                    name += "tag_extract_";
+                    break;
+            }
+
+            switch (selector.extract) {
+                case "players":
+                    name += "player";
+                    break;
+                case "tags":
+                    name += "tag";
+                    break;
+            }
+
+            if (selector.val != null && selector.extract == "tags") {
+                elems.push({ type: "element", name: name, elements: [], attributes: { tag: selector.val }});
+            }
+            else {
+                elems.push({ type: "element", name: name, elements: []});
+            }
+
+            for (let sel of selector.selector) {
+                serializeSelector(sel, elems[elems.length - 1].elements);
+            }
+            break;
         case "has_type":
             elems.push({ type: "element", name: "has_type", attributes: { tag: selector.val } });
+            break;
+        case "tag_group":
+            elems.push({ type: "element", name: "tag_group", attributes: { name: selector.val } });
             break;
         case null:
             elems.push({ type: "element", name: "empty" });
@@ -63,7 +100,13 @@ function serializeSelector(selector, elems) {
 }
 
 function serializeTag(tag, elems) {
-    elems.push({ type: "element", name: "tag", attributes: { name: tag } });
+    var newLen = elems.push({ type: "element", name: "tag", attributes: { name: tag.val }, elements: [] });
+
+    if (!tag.containsData) {
+        return;
+    }
+
+    serializeSelector(tag.selector, elems[newLen - 1].elements);
 }
 
 function serializeRequires(action, elems) {

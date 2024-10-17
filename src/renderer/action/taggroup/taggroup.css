@@ -1,0 +1,21 @@
+.attach-button-absolute {
+    position: absolute;
+    right: 6em;
+
+    border: 0px;
+    height: 2.25em;
+    opacity: 40%;
+}
+
+.delete-button-absolute {
+    position: absolute;
+    right: 1em;
+}
+
+.attach-button-inline:hover {
+    opacity: 100%;
+}
+
+div.display-inline.justify-left {
+    justify-content: flex-start;
+}

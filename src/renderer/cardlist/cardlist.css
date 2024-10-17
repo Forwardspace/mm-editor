@@ -37,6 +37,7 @@
 
 div > .modal-content {
     border: 0px;
+    background-color: rgb(18, 18, 18);
 }
 
 .modal-header {

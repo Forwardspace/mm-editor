@@ -25,12 +25,7 @@ export function CardList() {
             </div>
 
             <Modal show={modalData_reactive.show}>
-                <Modal.Header>
-                    <Modal.Title>{modalData_reactive.title}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {modalData_reactive.contents}
-                </Modal.Body>
+                {modalData_reactive.contents}
             </Modal>
         </div>
     );

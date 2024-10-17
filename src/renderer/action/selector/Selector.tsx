@@ -3,7 +3,7 @@ import React from 'react';
 import './selector.css';
 import { actions, modalData } from '../../state';
 
-import { Button, Card } from 'react-bootstrap';
+import { Button, Card, Dropdown, DropdownButton, Tab, Tabs } from 'react-bootstrap';
 
 function getNestedSelectorHeader(props) {
     switch (props.contents.type) {
@@ -45,6 +45,31 @@ function getNestedSelectorHeader(props) {
                     /> 
                     :
                 </h3>);
+        case "extract":
+            return (
+                <div className="display-inline">
+                    <h3>from</h3>
+                    <DropdownButton title={props.contents.from}>
+                        <Dropdown.Item onClick={() => { props.passdown.from = "players" }}>players</Dropdown.Item>
+                        <Dropdown.Item onClick={() => { props.passdown.from = "tags" }}>tags</Dropdown.Item>
+                    </DropdownButton>
+                    <h3>extract</h3>
+                    <DropdownButton title={props.contents.extract}>
+                        <Dropdown.Item onClick={() => { props.passdown.extract = "players" }}>players</Dropdown.Item>
+                        <Dropdown.Item onClick={() => { props.passdown.extract = "tags" }}>tags</Dropdown.Item>
+                    </DropdownButton>
+                    { props.contents.extract == "tags" && (
+                        <React.Fragment>
+                            <h3>with type: </h3>
+                            <input
+                                className="wide spaced" 
+                                type="text" 
+                                value={props.contents.val} 
+                                onChange={(ev) => { props.passdown.val = ev.target.value }} 
+                            />
+                        </React.Fragment>
+                    )}
+                </div>)
         default:
             return (<h3>(unknown nested selector type)</h3>);
     }
@@ -64,6 +89,9 @@ function renderNestedSelector(props) {
         }
     }
 
+    // Make sure not to allow more user to select more domain selectors
+    var childAllow = (props.allow[0] == "Domain")? props.allow.slice(1) : props.allow.slice();
+
     return (
         <Card className="selector-card">
             <Card.Header className="display-inline">
@@ -74,7 +102,7 @@ function renderNestedSelector(props) {
                 {
                     props.contents.selector? props.contents.selector.map((selector, idx) => (
                         <Selector 
-                            basic={props.basic} 
+                            allow={childAllow} 
                             contents={selector} 
                             passdown={props.passdown.selector[idx]} 
                             onChange={onChange.bind(this, idx)} 
@@ -82,7 +110,7 @@ function renderNestedSelector(props) {
                     )) : <p>(no selectors)</p>
                 }
                 <Button className="add-new-button" onClick={() => {
-                    openAddNewSelectorModal(onChange.bind(this, -1), props.basic? "basic" : "none") 
+                    openAddNewSelectorModal(onChange.bind(this, -1), childAllow) 
                 }}>Add new selector
                 </Button>
             </Card.Body>
@@ -105,6 +133,21 @@ function renderTerminal(props) {
                         onChange={(ev) => { props.passdown.val = ev.target.value }}
                     />
                 </p>;
+            break;
+        case "tag_group":
+            terminal =
+            <p>
+                Select all tags from tag group
+                <input 
+                        type="text" 
+                        className="wide spaced" 
+                        value={ props.contents.val } 
+                        onChange={(ev) => { props.passdown.val = ev.target.value }}
+                />
+            </p>
+            break;
+        case "current_player":
+            terminal = <p><b>Select the current player</b></p>
             break;
         case "all":
             terminal = <p><b>Select all valid targets</b></p>;
@@ -142,9 +185,12 @@ function renderSelectorBody(props, isBasic) {
         case "not":
         case "random":
         case "chance":
+        case "extract":
             return renderNestedSelector(props);
         case "has_type":
         case "all":
+        case "current_player":
+        case "tag_group":
             return renderTerminal(props);
         default:
             return (<p>Unknown selector type :: { JSON.stringify(props.contents) }</p>)
@@ -159,54 +205,78 @@ function getNewSelectorOfType(t) {
             return {type: t, selector: []};
         case "has_type":
             return {type: t, val: "<write tag here>"};
+        case "tag_group":
+            return {type: t, val: "<write group name here>"}
         case "players":
         case "tags":
             return {type: t, selector: []};
+        case "extract":
+            return {type: t, from: "players", extract: "tags", selector: []}
         case "chance":
             return {type: t, val: "50%", selector: []};
         case "random":
             return { type: t, val: "1", selector: [{ type: "all" }] };
         case "all":
+        case "current_player":
             return { type: t };
     }
 }
 
-function openAddNewSelectorModal(onChange, limit="none") {
+function openAddNewSelectorModal(onChange, allow:any=null) {
     var options = [
-        {type: "players", header: "Players", text: "Select among all players in the game"},
-        {type: "tags", header: "Tags", text: "Select among all tags in the game"},
-        {type: "has_type", header: "Has Type // Tag", text: "Checks if a person has a tag of a certain name"},
-        {type: "union", header: "Union // Any", text: "Logical 'or' operator. Used to combine results of selectors inside it"},
-        {type: "intersection", header: "Intersection // All", text: "Logical 'and' operator. Returns only the values that are common to all selectors inside it"},
-        {type: "not", header: "Not", text: "Logical 'not' operator. Returns every value except what is inside it"},
-        {type: "random", header: "Random", text: "Used to randomly select between targets with a specified frequency"},
-        {type: "chance", header: "Chance", text: "Assign a percentage likelihood to what's inside it"},
-        {type: "all", header: "All", text: "Select all valid targets in the domain"},
+        {title: "Domain", contents: [
+            {type: "players", header: "Players", text: "Select among all players in the game"},
+            {type: "tags", header: "Tags", text: "Select among all tags in the game"},
+        ]},
+        {title: "Terminal", contents: [
+            {type: "has_type", header: "Has Type", text: "Checks if a person (or tag, depends on context) has a tag of a certain name"},
+            {type: "current_player", header: "Current Player", text: "Current player that's being assigned tags (only used in Assign action)"},
+            {type: "all", header: "All", text: "Select all valid targets in the domain"},
+            {type: "tag_group", header: "Tag Group", text: "Select among tags in a specified tag group"}
+        ]},
+        {title: "Combinatory", contents: [
+            {type: "union", header: "Union", text: "Logical 'or' operator. Used to combine results of selectors inside it"},
+            {type: "intersection", header: "Intersection", text: "Logical 'and' operator. Returns only the values that are common to all selectors inside it"},
+            {type: "not", header: "Not", text: "Logical 'not' operator. Returns every value except what is inside it"},
+        ]},
+        {title: "Filters", contents: [
+            {type: "extract", header: "Extract Parameter", text: "Takes the targets and returns the parameters"},
+            {type: "random", header: "Random", text: "Used to randomly select between targets with a specified frequency"},
+            {type: "chance", header: "Chance", text: "Assign a percentage likelihood to what's inside it"},
+        ]}
     ];
 
-    // Leave either only domain or non-domain selectors
-    if (limit.includes("domain")) {
-        options.splice(2);
-        modalData.title = "Add domain selector";
+    if (allow != null && allow.length > 0 && allow[0] == "Domain") {
+        // Only show Domain category first
+        options.splice(1);
     }
-    else {
-        options.splice(0, 2);
-        modalData.title = "Add selector";
-    }
-
-    if (limit.includes("basic") && !limit.includes("domain")) {
-        // Remove advanced selectors
-        options.splice(options.length - 3, 3);
+    else if (allow != null && allow.length > 0) {
+        options = options.filter((cat, idx) => {
+            return (allow.indexOf(cat.title) != -1);
+        })
     }
 
-    modalData.contents = options.map((option) => (
-        <Card className="selector-card sc-button" onClick={() => { onChange(getNewSelectorOfType(option.type)); modalData.show = false; }}>
-            <Card.Header><h3>{option.header}</h3></Card.Header>
-            <Card.Body>
-                <p>{option.text}</p>
-            </Card.Body>
-        </Card>
-    ))
+    if (allow.length == 0) {
+        // Remove Domain category unless it's explicitly allowed
+        options.splice(0, 1);
+    }
+
+    modalData.contents = (
+        <Tabs>
+            {options.map((category) => (
+                <Tab transition={false} eventKey={category.title} title={category.title}>
+                    {category.contents.map((selector) => (
+                        <Card className="selector-card sc-button" onClick={() => { onChange(getNewSelectorOfType(selector.type)); modalData.show = false; }}>
+                        <Card.Header><h3>{selector.header}</h3></Card.Header>
+                        <Card.Body>
+                            <p>{selector.text}</p>
+                        </Card.Body>
+                    </Card>
+                    ))}
+                </Tab>
+            ))}
+        </Tabs>
+    );
 
     modalData.show = true;
 }
@@ -215,18 +285,7 @@ export function Selector(props) {
     if (props.contents == null) {
         // Display an add new button only if there's no selector yet
         return (
-            <Button className="add-new-button" onClick={ () => openAddNewSelectorModal(props.onChange, props.basic? "basic" : "none") }>Add new selector</Button>
-        );
-    }
-
-    return renderSelectorBody(props, true);
-}
-
-export function DomainSelector(props) {
-    if (props.contents == null) {
-        // Same as normal selector except limited to domain selectors only
-        return (
-            <Button className="add-new-button" onClick={ () => openAddNewSelectorModal(props.onChange, props.basic? "basic domain" : "domain") }>Add new domain selector</Button>
+            <Button className="add-new-button" onClick={ () => openAddNewSelectorModal(props.onChange, props.allow) }>Add new selector</Button>
         );
     }
 

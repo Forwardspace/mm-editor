@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Card } from 'react-bootstrap';
+import { Button, Card, Modal } from 'react-bootstrap';
 
-import { DomainSelector } from './selector/Selector.tsx';
+import { Selector } from './selector/Selector.tsx';
 
 import './action.css'
 import { actions, modalData } from '../state.tsx';
@@ -56,7 +56,7 @@ function getBackgroundColor(type) {
 
 function renderRequirementBody(contents, action) {
     // Requirement contains just a nested selector
-    return (<DomainSelector basic={true} contents={contents.selector} passdown={action.selector} onChange={ (sel) => { action.selector = sel } } />);
+    return (<Selector allow={["Domain", "Terminal", "Combinatory"]} contents={contents.selector} passdown={action.selector} onChange={ (sel) => { action.selector = sel } } />);
 }
 
 function renderActivateBody(contents, action) {
@@ -66,7 +66,7 @@ function renderActivateBody(contents, action) {
 function renderAssignBody(contents, action) {
     return (
         <React.Fragment>
-            <DomainSelector basic={false} contents={contents.selector} passdown={action.selector}  onChange={ (sel) => { action.selector = sel } } />
+            <Selector allow={["Domain"]} contents={contents.selector} passdown={action.selector}  onChange={ (sel) => { action.selector = sel } } />
             <hr/>
             <TagGroup contents={contents} passdown={action} />
         </React.Fragment>
@@ -76,7 +76,7 @@ function renderAssignBody(contents, action) {
 function renderHandoutBody(contents, action) {
     return (
         <React.Fragment>
-            <DomainSelector basic={false} contents={contents.selector} passdown={action.selector}  onChange={ (sel) => { action.selector = sel } } />
+            <Selector allow={["Domain"]} contents={contents.selector} passdown={action.selector}  onChange={ (sel) => { action.selector = sel } } />
             <hr />
             <HandoutTextArea contents={contents} passdown={contents} onChange={ (text) => { action.text = text; } } />
         </React.Fragment>
@@ -132,35 +132,39 @@ function addNewAction(t) {
 }
 
 export function openAddNewActionModal(limit="rule") {
-    modalData.title = "New action";
     if (limit == "rule") {
         modalData.contents = (
-            <div>
-                <Card style={ getBackgroundColor("requirement") } onClick={() => { addNewAction("requirement"); modalData.show = false; }}>
-                    <Card.Header><h3>Requirement</h3></Card.Header>
-                    <Card.Body>
-                        <p>Requires that all conditions inside it be true for the rule to run.</p>
-                    </Card.Body>
-                </Card>
-                <Card style={ getBackgroundColor("activate") } onClick={() => { addNewAction("activate"); modalData.show = false; }}>
-                    <Card.Header><h3>Activate</h3></Card.Header>
-                    <Card.Body>
-                        <p>Runs one or more other rules</p>
-                    </Card.Body>
-                </Card>
-                <Card style={ getBackgroundColor("assign") } onClick={() => { addNewAction("assign"); modalData.show = false; }}>
-                    <Card.Header><h3>Assign</h3></Card.Header>
-                    <Card.Body>
-                        <p>Assigns one or more tags to one or more specific people</p>
-                    </Card.Body>
-                </Card>
-                <Card style={ getBackgroundColor("handout") } onClick={() => { addNewAction("handout"); modalData.show = false; }}>
-                    <Card.Header><h3>Handout</h3></Card.Header>
-                    <Card.Body>
-                        <p>Gives visible text to one or more specific people</p>
-                    </Card.Body>
-                </Card>
-            </div>
+            <React.Fragment>
+                <Modal.Header>
+                    <h3>Add new action</h3>
+                </Modal.Header>
+                <Modal.Body>
+                    <Card style={ getBackgroundColor("requirement") } onClick={() => { addNewAction("requirement"); modalData.show = false; }}>
+                        <Card.Header><h3>Requirement</h3></Card.Header>
+                        <Card.Body>
+                            <p>Requires that all conditions inside it be true for the rule to run.</p>
+                        </Card.Body>
+                    </Card>
+                    <Card style={ getBackgroundColor("activate") } onClick={() => { addNewAction("activate"); modalData.show = false; }}>
+                        <Card.Header><h3>Activate</h3></Card.Header>
+                        <Card.Body>
+                            <p>Runs one or more other rules</p>
+                        </Card.Body>
+                    </Card>
+                    <Card style={ getBackgroundColor("assign") } onClick={() => { addNewAction("assign"); modalData.show = false; }}>
+                        <Card.Header><h3>Assign</h3></Card.Header>
+                        <Card.Body>
+                            <p>Assigns one or more tags to one or more specific people</p>
+                        </Card.Body>
+                    </Card>
+                    <Card style={ getBackgroundColor("handout") } onClick={() => { addNewAction("handout"); modalData.show = false; }}>
+                        <Card.Header><h3>Handout</h3></Card.Header>
+                        <Card.Body>
+                            <p>Gives visible text to one or more specific people</p>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+            </React.Fragment>
         );
     }
     else if (limit == "setting") {
