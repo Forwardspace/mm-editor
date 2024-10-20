@@ -5,6 +5,7 @@ import { useSnapshot } from 'valtio';
 import { actions, meta } from '../state';
 
 import { saveFile } from '../serializer/serializer.tsx';
+import { loadFile } from '../serializer/deserializer.tsx';
 
 export function Header() {
     var meta_reactive = useSnapshot(meta);
@@ -26,7 +27,7 @@ export function Header() {
                         <Button className="nav-button save" onClick={ saveFile }><i className="las la-save"></i></Button>
                     </Nav.Item>
                     <Nav.Item>
-                        <Button className="nav-button load"><i className="las la-folder-open"></i></Button>
+                        <Button className="nav-button load" onClick={ loadFile }><i className="las la-folder-open"></i></Button>
                     </Nav.Item>
                     <Nav.Item>
                         <Button className="nav-button delete" onClick={ () => {actions.length = 0} } ><i className="las la-trash"></i></Button>

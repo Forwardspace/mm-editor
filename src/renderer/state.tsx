@@ -5,7 +5,7 @@ export var meta = proxy({
     type: "rule"
 });
 
-export var actions = proxy([]);
+export var actions : any[] = proxy([]);
 
 export var modalData = proxy({
     show: false,

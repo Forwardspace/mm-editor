@@ -159,7 +159,7 @@ function serializeFormattedHandout(text, elems) {
 }
 
 function serializeHandout(action, elems) {
-    var newLen = elems.push({ type: "element", name: "assign", elements: [] });
+    var newLen = elems.push({ type: "element", name: "handout", elements: [] });
     elems = elems[newLen - 1].elements;
 
     serializeSelector(action.selector, elems);

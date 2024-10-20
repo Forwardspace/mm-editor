@@ -14,7 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { writeFileSync } from 'fs';
+import { writeFileSync, readFileSync } from 'fs';
 
 class AppUpdater {
   constructor() {
@@ -51,6 +51,19 @@ ipcMain.on('save-file', (event, xml) => {
 
   // Save the xml in the opened file
   writeFileSync(openedFile, xml);
+});
+
+ipcMain.handle('load-file', (event) => {
+  var dialogResult = dialog.showOpenDialogSync({
+    properties: [ 'openFile', 'createDirectory' ]
+  });
+  if (dialogResult) {
+    openedFile = dialogResult[0];
+
+    return readFileSync(openedFile, 'utf-8');
+  }
+
+  return null;
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -147,3 +160,7 @@ app
     });
   })
   .catch(console.log);
+function loadFileSync(): void {
+  throw new Error('Function not implemented.');
+}
+
