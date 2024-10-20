@@ -228,6 +228,8 @@ function deserializeActions(xml) {
 
     for (let element of root.elements) {
         deserializeElement(element);
+
+        actions[actions.length - 1].id = actions.length - 1;
     }
 }
 
